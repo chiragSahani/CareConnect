@@ -26,7 +26,10 @@ export const useApp = () => {
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>(() => {
+    const savedAppointments = localStorage.getItem('appointments');
+    return savedAppointments ? JSON.parse(savedAppointments) : [];
+  });
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialization, setSelectedSpecialization] = useState('');
@@ -37,7 +40,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
     };
-    setAppointments(prev => [...prev, newAppointment]);
+    setAppointments(prev => {
+      const updatedAppointments = [...prev, newAppointment];
+      localStorage.setItem('appointments', JSON.stringify(updatedAppointments));
+      return updatedAppointments;
+    });
   };
 
   const addChatMessage = (messageData: Omit<ChatMessage, 'id'>) => {
