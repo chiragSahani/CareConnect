@@ -25,7 +25,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
               <Route path="/doctors" element={<PrivateRoute><Doctors /></PrivateRoute>} />
               <Route path="/doctors/:id" element={<PrivateRoute><DoctorProfile /></PrivateRoute>} />
               <Route path="/book/:id" element={<PrivateRoute><BookAppointment /></PrivateRoute>} />
@@ -33,6 +33,7 @@ function App() {
               <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
               <Route path="/about" element={<PrivateRoute><About /></PrivateRoute>} />
               <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+              <Route path="*" element={<Register />} />
             </Routes>
           </main>
           <Footer />
