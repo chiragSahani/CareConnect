@@ -34,7 +34,7 @@ const Register: React.FC = () => {
     try {
       const { data } = await api.signUp(formData);
       localStorage.setItem('profile', JSON.stringify(data));
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       toast({
         title: 'Error signing up.',

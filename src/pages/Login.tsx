@@ -26,7 +26,7 @@ const Login: React.FC = () => {
     try {
       const { data } = await api.signIn(formData);
       localStorage.setItem('profile', JSON.stringify(data));
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       toast({
         title: 'Error logging in.',
