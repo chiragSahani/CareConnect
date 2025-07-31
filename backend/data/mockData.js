@@ -1,194 +1,101 @@
 const mockDoctors = [
   {
     id: '1',
-    name: 'Dr. Sarah Johnson',
+    name: 'Dr. Evelyn Reed',
     specialization: 'Cardiologist',
-    experience: 12,
+    experience: 15,
     rating: 4.9,
-    reviewCount: 128,
-    image: 'https://images.pexels.com/photos/5327921/pexels-photo-5327921.jpeg?auto=compress&cs=tinysrgb&w=400',
-    credentials: ['MD', 'FACC', 'Board Certified'],
-    bio: 'Dr. Sarah Johnson is a highly experienced cardiologist with over 12 years of practice. She specializes in preventive cardiology and has helped thousands of patients maintain heart health.',
+    reviewCount: 212,
+    image: 'https://images.pexels.com/photos/4167541/pexels-photo-4167541.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    credentials: ['MD', 'FACC', 'Board Certified in Cardiology'],
+    bio: 'Dr. Evelyn Reed is a renowned cardiologist with a passion for preventive care and patient education. She has been recognized as a top doctor in her field for the last 5 years.',
     languages: ['English', 'Spanish'],
-    consultationFee: 150,
+    consultationFee: 250,
     availability: {
-      monday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00', '15:00'] },
-      tuesday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00'] },
-      wednesday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00'] },
-      thursday: { isAvailable: true, slots: ['09:00', '10:00', '14:00', '15:00'] },
-      friday: { isAvailable: true, slots: ['09:00', '10:00', '11:00'] },
+      monday: { isAvailable: true, slots: ['10:00', '11:00', '14:00', '15:00'] },
+      tuesday: { isAvailable: true, slots: ['09:00', '10:00', '11:00'] },
+      wednesday: { isAvailable: false, slots: [] },
+      thursday: { isAvailable: true, slots: ['10:00', '11:00', '14:00', '15:00'] },
+      friday: { isAvailable: true, slots: ['09:00', '10:00'] },
       saturday: { isAvailable: false, slots: [] },
       sunday: { isAvailable: false, slots: [] }
     },
     reviews: [
       {
         id: '1',
-        patientName: 'John Smith',
+        patientName: 'John Doe',
         rating: 5,
-        comment: 'Excellent doctor! Very thorough and caring.',
-        date: '2024-01-15'
+        comment: 'Dr. Reed is an exceptional doctor. She is very attentive and caring.',
+        date: '2024-02-10'
       },
       {
         id: '2',
-        patientName: 'Emily Davis',
+        patientName: 'Jane Smith',
         rating: 5,
-        comment: 'Dr. Johnson saved my life. Highly recommend!',
-        date: '2024-01-10'
+        comment: 'I highly recommend Dr. Reed. She is very knowledgeable and professional.',
+        date: '2024-01-20'
       }
     ]
   },
   {
     id: '2',
-    name: 'Dr. Michael Chen',
+    name: 'Dr. Benjamin Carter',
     specialization: 'Dermatologist',
-    experience: 8,
+    experience: 10,
     rating: 4.8,
-    reviewCount: 95,
-    image: 'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=400',
-    credentials: ['MD', 'Board Certified Dermatologist'],
-    bio: 'Dr. Michael Chen is a board-certified dermatologist specializing in both medical and cosmetic dermatology. He has extensive experience in treating skin conditions and aesthetic procedures.',
-    languages: ['English', 'Mandarin'],
-    consultationFee: 120,
+    reviewCount: 156,
+    image: 'https://images.pexels.com/photos/5215024/pexels-photo-5215024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    credentials: ['MD', 'Board Certified in Dermatology'],
+    bio: 'Dr. Benjamin Carter is a leading dermatologist specializing in cosmetic and medical dermatology. He is known for his innovative treatments and personalized approach to patient care.',
+    languages: ['English', 'French'],
+    consultationFee: 200,
     availability: {
-      monday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '13:00', '14:00'] },
-      tuesday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '13:00', '14:00', '15:00'] },
-      wednesday: { isAvailable: true, slots: ['08:00', '09:00', '13:00', '14:00'] },
-      thursday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '13:00', '14:00', '15:00'] },
-      friday: { isAvailable: true, slots: ['08:00', '09:00', '10:00'] },
-      saturday: { isAvailable: true, slots: ['09:00', '10:00', '11:00'] },
+      monday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00', '15:00'] },
+      tuesday: { isAvailable: false, slots: [] },
+      wednesday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00'] },
+      thursday: { isAvailable: true, slots: ['09:00', '10:00', '11:00'] },
+      friday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00', '15:00'] },
+      saturday: { isAvailable: false, slots: [] },
       sunday: { isAvailable: false, slots: [] }
     },
     reviews: [
       {
         id: '3',
-        patientName: 'Lisa Wilson',
+        patientName: 'Alice Johnson',
         rating: 5,
-        comment: 'Amazing results! Dr. Chen is very professional.',
-        date: '2024-01-12'
+        comment: 'Dr. Carter is a fantastic doctor. My skin has never looked better!',
+        date: '2024-03-01'
       }
     ]
   },
   {
     id: '3',
-    name: 'Dr. Emily Rodriguez',
+    name: 'Dr. Olivia Chen',
     specialization: 'Pediatrician',
-    experience: 15,
+    experience: 12,
     rating: 4.9,
-    reviewCount: 156,
-    image: 'https://images.pexels.com/photos/5327658/pexels-photo-5327658.jpeg?auto=compress&cs=tinysrgb&w=400',
-    credentials: ['MD', 'Board Certified Pediatrician', 'FAAP'],
-    bio: 'Dr. Emily Rodriguez has been caring for children for over 15 years. She is passionate about child development and preventive care, making every visit comfortable for both children and parents.',
-    languages: ['English', 'Spanish', 'Portuguese'],
-    consultationFee: 100,
+    reviewCount: 320,
+    image: 'https://images.pexels.com/photos/356040/pexels-photo-356040.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    credentials: ['MD', 'FAAP', 'Board Certified in Pediatrics'],
+    bio: 'Dr. Olivia Chen is a compassionate pediatrician with a gentle approach to child care. She is dedicated to providing the best possible care for her young patients.',
+    languages: ['English', 'Mandarin'],
+    consultationFee: 150,
     availability: {
-      monday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00'] },
-      tuesday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '11:00', '13:00'] },
-      wednesday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '13:00', '14:00'] },
-      thursday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00'] },
-      friday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '11:00'] },
+      monday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00', '15:00'] },
+      tuesday: { isAvailable: true, slots: ['09:00', '10:00', '11:00'] },
+      wednesday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00'] },
+      thursday: { isAvailable: false, slots: [] },
+      friday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00', '15:00'] },
       saturday: { isAvailable: false, slots: [] },
       sunday: { isAvailable: false, slots: [] }
     },
     reviews: [
       {
         id: '4',
-        patientName: 'Maria Garcia',
+        patientName: 'Michael Brown',
         rating: 5,
-        comment: 'Dr. Rodriguez is wonderful with children. Highly recommend!',
-        date: '2024-01-08'
-      }
-    ]
-  },
-  {
-    id: '4',
-    name: 'Dr. David Thompson',
-    specialization: 'Orthopedic Surgeon',
-    experience: 18,
-    rating: 4.7,
-    reviewCount: 203,
-    image: 'https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=400',
-    credentials: ['MD', 'Board Certified Orthopedic Surgeon'],
-    bio: 'Dr. David Thompson is a leading orthopedic surgeon with expertise in sports medicine and joint replacement. He has performed thousands of successful surgeries throughout his career.',
-    languages: ['English'],
-    consultationFee: 200,
-    availability: {
-      monday: { isAvailable: true, slots: ['07:00', '08:00', '09:00', '13:00'] },
-      tuesday: { isAvailable: true, slots: ['07:00', '08:00', '09:00', '13:00', '14:00'] },
-      wednesday: { isAvailable: true, slots: ['07:00', '08:00', '13:00', '14:00'] },
-      thursday: { isAvailable: true, slots: ['07:00', '08:00', '09:00', '13:00'] },
-      friday: { isAvailable: true, slots: ['07:00', '08:00', '09:00'] },
-      saturday: { isAvailable: false, slots: [] },
-      sunday: { isAvailable: false, slots: [] }
-    },
-    reviews: [
-      {
-        id: '5',
-        patientName: 'Robert Johnson',
-        rating: 5,
-        comment: 'Excellent surgeon! My knee replacement was perfect.',
-        date: '2024-01-05'
-      }
-    ]
-  },
-  {
-    id: '5',
-    name: 'Dr. Lisa Park',
-    specialization: 'Neurologist',
-    experience: 10,
-    rating: 4.8,
-    reviewCount: 87,
-    image: 'https://images.pexels.com/photos/5327656/pexels-photo-5327656.jpeg?auto=compress&cs=tinysrgb&w=400',
-    credentials: ['MD', 'PhD', 'Board Certified Neurologist'],
-    bio: 'Dr. Lisa Park specializes in treating neurological disorders with a focus on headaches, epilepsy, and movement disorders. She combines cutting-edge research with compassionate patient care.',
-    languages: ['English', 'Korean'],
-    consultationFee: 180,
-    availability: {
-      monday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00', '15:00'] },
-      tuesday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00'] },
-      wednesday: { isAvailable: true, slots: ['09:00', '10:00', '14:00', '15:00'] },
-      thursday: { isAvailable: true, slots: ['09:00', '10:00', '11:00', '14:00', '15:00'] },
-      friday: { isAvailable: true, slots: ['09:00', '10:00', '11:00'] },
-      saturday: { isAvailable: true, slots: ['10:00', '11:00'] },
-      sunday: { isAvailable: false, slots: [] }
-    },
-    reviews: [
-      {
-        id: '6',
-        patientName: 'Anna Kim',
-        rating: 5,
-        comment: 'Dr. Park helped me manage my migraines effectively.',
-        date: '2024-01-03'
-      }
-    ]
-  },
-  {
-    id: '6',
-    name: 'Dr. James Wilson',
-    specialization: 'General Practitioner',
-    experience: 20,
-    rating: 4.6,
-    reviewCount: 312,
-    image: 'https://images.pexels.com/photos/5452274/pexels-photo-5452274.jpeg?auto=compress&cs=tinysrgb&w=400',
-    credentials: ['MD', 'Family Medicine Board Certified'],
-    bio: 'Dr. James Wilson has been providing comprehensive family healthcare for over 20 years. He focuses on preventive care and building long-term relationships with his patients.',
-    languages: ['English', 'French'],
-    consultationFee: 80,
-    availability: {
-      monday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00'] },
-      tuesday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00'] },
-      wednesday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '13:00', '14:00', '15:00'] },
-      thursday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00'] },
-      friday: { isAvailable: true, slots: ['08:00', '09:00', '10:00', '11:00'] },
-      saturday: { isAvailable: true, slots: ['09:00', '10:00', '11:00'] },
-      sunday: { isAvailable: false, slots: [] }
-    },
-    reviews: [
-      {
-        id: '7',
-        patientName: 'Tom Brown',
-        rating: 4,
-        comment: 'Very experienced doctor. Great bedside manner.',
-        date: '2024-01-01'
+        comment: 'Dr. Chen is wonderful with kids. My children love her!',
+        date: '2024-02-15'
       }
     ]
   }

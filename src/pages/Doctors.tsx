@@ -1,10 +1,31 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  Box,
+  Container,
+  Heading,
+  Text,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Button,
+  SimpleGrid,
+  Image,
+  Badge,
+  Flex,
+  Icon,
+  Collapse,
+  Select,
+  Stack,
+} from '@chakra-ui/react';
+import { SearchIcon, StarIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
-import { Search, Filter, Star, MapPin, Clock, DollarSign } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import * as api from '../api';
 import { Doctor } from '../types';
+import { Clock, DollarSign, Filter } from 'lucide-react';
+
+const MotionBox = motion(Box);
 
 const Doctors: React.FC = () => {
   const { doctors, setDoctors, searchQuery, setSearchQuery, selectedSpecialization, setSelectedSpecialization } = useApp();
@@ -34,177 +55,166 @@ const Doctors: React.FC = () => {
   }, [doctors, searchQuery, selectedSpecialization]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
+    <Box bg="gray.50" minH="100vh" py={8}>
+      <Container maxW="7xl">
+        <MotionBox
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          textAlign="center"
+          mb={12}
         >
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Find Your Doctor</h1>
-          <p className="text-xl text-gray-600">Connect with qualified healthcare professionals</p>
-        </motion.div>
+          <Heading as="h1" size="2xl" mb={4}>
+            Find Your Doctor
+          </Heading>
+          <Text fontSize="xl" color="gray.600">
+            Connect with qualified healthcare professionals
+          </Text>
+        </MotionBox>
 
-        {/* Search and Filters */}
-        <motion.div
+        <MotionBox
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-8 space-y-4"
+          mb={8}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
         >
-          {/* Search Bar */}
-          <div className="relative max-w-2xl mx-auto">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <input
-              type="text"
+          <InputGroup maxW="2xl" mb={4}>
+            <InputLeftElement pointerEvents="none">
+              <SearchIcon color="gray.300" />
+            </InputLeftElement>
+            <Input
               placeholder="Search doctors by name or specialization..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              bg="white"
             />
-          </div>
+          </InputGroup>
 
-          {/* Filter Toggle */}
-          <div className="flex justify-center">
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <Filter className="h-4 w-4" />
-              <span>Filters</span>
-            </button>
-          </div>
+          <Button onClick={() => setShowFilters(!showFilters)} leftIcon={<Icon as={Filter} />}>
+            Filters
+          </Button>
 
-          {/* Filters */}
-          {showFilters && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="bg-white p-6 rounded-lg shadow-md"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Specialization</label>
-                  <select
-                    value={selectedSpecialization}
-                    onChange={(e) => setSelectedSpecialization(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">All Specializations</option>
-                    {specializations.map(spec => (
-                      <option key={spec} value={spec}>{spec}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </motion.div>
+          <Collapse in={showFilters} animateOpacity>
+            <Box p={4} mt={4} bg="white" rounded="md" shadow="md">
+              <Stack>
+                <Select
+                  placeholder="All Specializations"
+                  value={selectedSpecialization}
+                  onChange={(e) => setSelectedSpecialization(e.target.value)}
+                >
+                  {specializations.map(spec => (
+                    <option key={spec} value={spec}>{spec}</option>
+                  ))}
+                </Select>
+              </Stack>
+            </Box>
+          </Collapse>
+        </MotionBox>
 
-        {/* Results Count */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8"
-        >
-          <p className="text-gray-600">
-            Found {filteredDoctors.length} doctor{filteredDoctors.length !== 1 ? 's' : ''}
-          </p>
-        </motion.div>
+        <Text mb={8} color="gray.600">
+          Found {filteredDoctors.length} doctor{filteredDoctors.length !== 1 ? 's' : ''}
+        </Text>
 
-        {/* Doctors Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
           {filteredDoctors.map((doctor, index) => (
-            <motion.div
+            <MotionBox
               key={doctor.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 * index }}
               whileHover={{ y: -5 }}
-              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+              bg="white"
+              rounded="xl"
+              shadow="lg"
+              overflow="hidden"
             >
-              <div className="relative">
-                <img
-                  src={doctor.image}
-                  alt={doctor.name}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute top-4 right-4 bg-white bg-opacity-90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center space-x-1">
-                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                  <span className="text-sm font-medium">{doctor.rating}</span>
-                </div>
-              </div>
+              <Box position="relative">
+                <Image src={doctor.image} alt={doctor.name} w="full" h={48} objectFit="cover" />
+                <Badge
+                  position="absolute"
+                  top={4}
+                  right={4}
+                  colorScheme="yellow"
+                  display="flex"
+                  alignItems="center"
+                >
+                  <Icon as={StarIcon} mr={1} /> {doctor.rating}
+                </Badge>
+              </Box>
 
-              <div className="p-6">
-                <div className="mb-3">
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">{doctor.name}</h3>
-                  <p className="text-blue-600 font-medium">{doctor.specialization}</p>
-                </div>
+              <Box p={6}>
+                <Heading as="h3" size="lg" mb={1}>
+                  {doctor.name}
+                </Heading>
+                <Text color="blue.600" fontWeight="medium" mb={3}>
+                  {doctor.specialization}
+                </Text>
 
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Clock className="h-4 w-4 mr-2" />
-                    <span>{doctor.experience} years experience</span>
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <DollarSign className="h-4 w-4 mr-2" />
-                    <span>${doctor.consultationFee} consultation fee</span>
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Star className="h-4 w-4 mr-2" />
-                    <span>{doctor.reviewCount} reviews</span>
-                  </div>
-                </div>
+                <Stack spacing={2} mb={4}>
+                  <Flex align="center">
+                    <Icon as={Clock} mr={2} />
+                    <Text fontSize="sm">{doctor.experience} years experience</Text>
+                  </Flex>
+                  <Flex align="center">
+                    <Icon as={DollarSign} mr={2} />
+                    <Text fontSize="sm">${doctor.consultationFee} consultation fee</Text>
+                  </Flex>
+                  <Flex align="center">
+                    <Icon as={StarIcon} mr={2} />
+                    <Text fontSize="sm">{doctor.reviewCount} reviews</Text>
+                  </Flex>
+                </Stack>
 
-                <div className="flex space-x-2">
-                  <Link
-                    to={`/doctors/${doctor.id}`}
-                    className="flex-1 bg-blue-600 text-white text-center py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                  >
-                    View Profile
+                <Stack direction="row" spacing={2}>
+                  <Link to={`/doctors/${doctor.id}`} style={{ flex: 1 }}>
+                    <Button colorScheme="blue" w="full">
+                      View Profile
+                    </Button>
                   </Link>
-                  <Link
-                    to={`/book/${doctor.id}`}
-                    className="flex-1 border border-blue-600 text-blue-600 text-center py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors"
-                  >
-                    Book Now
+                  <Link to={`/book/${doctor.id}`} style={{ flex: 1 }}>
+                    <Button variant="outline" colorScheme="blue" w="full">
+                      Book Now
+                    </Button>
                   </Link>
-                </div>
-              </div>
-            </motion.div>
+                </Stack>
+              </Box>
+            </MotionBox>
           ))}
-        </div>
+        </SimpleGrid>
 
-        {/* No Results */}
         {filteredDoctors.length === 0 && (
-          <motion.div
+          <MotionBox
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="text-center py-16"
+            textAlign="center"
+            py={16}
           >
-            <div className="bg-gray-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
-              <Search className="h-12 w-12 text-gray-400" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No doctors found</h3>
-            <p className="text-gray-600 mb-4">Try adjusting your search criteria</p>
-            <button
+            <Box bg="gray.100" rounded="full" w={24} h={24} display="flex" alignItems="center" justifyContent="center" mx="auto" mb={4}>
+              <Icon as={SearchIcon} w={12} h={12} color="gray.400" />
+            </Box>
+            <Heading as="h3" size="lg" mb={2}>
+              No doctors found
+            </Heading>
+            <Text color="gray.600" mb={4}>
+              Try adjusting your search criteria
+            </Text>
+            <Button
               onClick={() => {
                 setSearchQuery('');
                 setSelectedSpecialization('');
               }}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              colorScheme="blue"
             >
               Clear Filters
-            </button>
-          </motion.div>
+            </Button>
+          </MotionBox>
         )}
-      </div>
-    </div>
+      </Container>
+    </Box>
   );
 };
 
