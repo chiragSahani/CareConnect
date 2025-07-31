@@ -5,7 +5,7 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const profile = localStorage.getItem('profile');
 
   if (!profile) {
-    return <Navigate to="/register" />;
+    return <Navigate to="/login" />;
   }
 
   return children;
