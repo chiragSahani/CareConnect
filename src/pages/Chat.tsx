@@ -3,15 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Trash2, MessageCircle } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-
-if (!API_KEY) {
-  throw new Error("Missing VITE_GEMINI_API_KEY in .env file");
-}
-
-const genAI = new GoogleGenerativeAI(API_KEY);
 
 const Chat: React.FC = () => {
   const { chatMessages, addChatMessage, clearChat } = useApp();
@@ -39,18 +30,15 @@ const Chat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro"});
-      const result = await model.generateContent(userMessage);
-      const response = await result.response;
-      const text = response.text();
+      // Simulate API call to Gemini (replace with actual API call)
+      const botResponse = await simulateGeminiResponse(userMessage);
       
       addChatMessage({
         type: 'bot',
-        content: text,
+        content: botResponse,
         timestamp: new Date(),
       });
     } catch (error) {
-      console.error("Error calling Gemini API:", error);
       addChatMessage({
         type: 'bot',
         content: 'I apologize, but I encountered an error. Please try again later.',
@@ -58,6 +46,60 @@ const Chat: React.FC = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Simulate Gemini API response (replace with actual Gemini API integration)
+  const simulateGeminiResponse = async (message: string): Promise<string> => {
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
+
+    const responses = {
+      greeting: [
+        "Hello! I'm your AI healthcare assistant. How can I help you today?",
+        "Hi there! I'm here to assist you with your healthcare questions and help you navigate our platform.",
+        "Welcome to CareConnect's AI assistant. What can I do for you?",
+      ],
+      symptoms: [
+        "I understand you're experiencing some symptoms. While I can provide general information, it's important to consult with a qualified healthcare professional for proper diagnosis and treatment. Would you like me to help you find a suitable doctor?",
+        "Thank you for sharing your symptoms. For your safety, I recommend scheduling an appointment with one of our qualified doctors for a proper evaluation. I can help you find the right specialist.",
+        "Based on the symptoms you've described, it would be best to speak with a doctor. I can help you find a specialist in your area.",
+      ],
+      booking: [
+        "I'd be happy to help you book an appointment! You can browse our available doctors by specialty, check their availability, and book directly through our platform. Would you like me to guide you to our doctor directory?",
+        "Booking an appointment is easy! Simply visit our 'Find Doctors' section, select your preferred specialist, and choose from their available time slots. Is there a particular specialty you're looking for?",
+        "To book an appointment, please go to the 'Appointments' section of our app. From there, you can search for doctors and book an appointment.",
+      ],
+      "find doctor": [
+        "I can help with that. What specialty are you looking for? For example, you can say 'find a cardiologist' or 'find a dermatologist'.",
+        "Absolutely. To find a doctor, please tell me the specialty you are interested in.",
+        "I can help you find a doctor. What type of doctor are you looking for?",
+      ],
+      general: [
+        "That's a great question! While I can provide general health information, I always recommend consulting with our qualified healthcare professionals for personalized advice. Is there anything specific I can help you with regarding our platform?",
+        "I'm here to help! For medical advice, please consult with one of our doctors. For questions about using our platform, booking appointments, or finding the right specialist, I'm at your service.",
+        "I can help with general questions about our platform. For medical advice, please consult a doctor.",
+      ],
+      default: [
+        "I'm sorry, I don't understand. Could you please rephrase your question?",
+        "I'm not sure how to respond to that. Could you please provide more details?",
+        "I am an AI assistant and my knowledge is limited. For more complex questions, please consult a doctor.",
+      ],
+    };
+
+    const lowerMessage = message.toLowerCase();
+
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+      return responses.greeting[Math.floor(Math.random() * responses.greeting.length)];
+    } else if (lowerMessage.includes('symptom') || lowerMessage.includes('pain') || lowerMessage.includes('hurt') || lowerMessage.includes('sick')) {
+      return responses.symptoms[Math.floor(Math.random() * responses.symptoms.length)];
+    } else if (lowerMessage.includes('appointment') || lowerMessage.includes('book') || lowerMessage.includes('schedule')) {
+      return responses.booking[Math.floor(Math.random() * responses.booking.length)];
+    } else if (lowerMessage.includes('doctor') || lowerMessage.includes('specialist')) {
+        return responses['find doctor'][Math.floor(Math.random() * responses['find doctor'].length)];
+    } else if (lowerMessage.includes('help')) {
+        return responses.general[Math.floor(Math.random() * responses.general.length)];
+    } else {
+      return responses.default[Math.floor(Math.random() * responses.default.length)];
     }
   };
 
