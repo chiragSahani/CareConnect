@@ -21,7 +21,7 @@ import {
 import { SearchIcon, StarIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
 import { useApp } from '../contexts/AppContext';
-import * as api from '../api';
+import { mockDoctors } from '../data/mockData';
 import { Doctor } from '../types';
 import { Clock, DollarSign, Filter } from 'lucide-react';
 
@@ -32,15 +32,7 @@ const Doctors: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    const getDoctors = async () => {
-      try {
-        const { data } = await api.fetchDoctors();
-        setDoctors(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getDoctors();
+    setDoctors(mockDoctors);
   }, [setDoctors]);
 
   const specializations = [...new Set(doctors.map(doctor => doctor.specialization))];
