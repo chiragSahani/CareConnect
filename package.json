@@ -11,6 +11,7 @@
     "start": "nodemon backend/server.js"
   },
   "dependencies": {
+    "react-countup": "^6.5.3",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.13.0",
