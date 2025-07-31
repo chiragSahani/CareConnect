@@ -1,72 +1,102 @@
 import React from 'react';
+import {
+  Box,
+  Container,
+  Stack,
+  Text,
+  useColorModeValue,
+  SimpleGrid,
+  Icon,
+  HStack,
+} from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 import { Heart, Phone, Mail, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-const Footer: React.FC = () => {
+const MotionBox = motion(Box);
+
+export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Heart className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-xl font-bold">CareConnect</span>
-            </div>
-            <p className="text-gray-400 text-sm">
+    <MotionBox
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      bg={useColorModeValue('gray.900', 'gray.900')}
+      color={useColorModeValue('gray.400', 'gray.400')}
+    >
+      <Container as={Stack} maxW={'7xl'} py={12}>
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={8}>
+          <Stack spacing={4}>
+            <HStack>
+              <Box bg="blue.500" p={2} rounded="lg">
+                <Heart size={20} color="white" />
+              </Box>
+              <Text fontSize="xl" fontWeight="bold" color="white">
+                CareConnect
+              </Text>
+            </HStack>
+            <Text fontSize={'sm'}>
               Your trusted healthcare partner, connecting you with the best medical professionals for comprehensive care.
-            </p>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="/doctors" className="text-gray-400 hover:text-white transition-colors">Find Doctors</a></li>
-              <li><a href="/appointments" className="text-gray-400 hover:text-white transition-colors">Book Appointment</a></li>
-              <li><a href="/about" className="text-gray-400 hover:text-white transition-colors">About Us</a></li>
-              <li><a href="/chat" className="text-gray-400 hover:text-white transition-colors">AI Assistant</a></li>
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Services</h3>
-            <ul className="space-y-2 text-sm">
-              <li><span className="text-gray-400">Cardiology</span></li>
-              <li><span className="text-gray-400">Dermatology</span></li>
-              <li><span className="text-gray-400">Pediatrics</span></li>
-              <li><span className="text-gray-400">Orthopedics</span></li>
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center space-x-2">
-                <Phone className="h-4 w-4 text-blue-400" />
-                <span className="text-gray-400">+1 (555) 123-4567</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-blue-400" />
-                <span className="text-gray-400">support@careconnect.com</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4 text-blue-400" />
-                <span className="text-gray-400">123 Healthcare St, Medical City</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-          <p>&copy; 2024 CareConnect. All rights reserved. | Privacy Policy | Terms of Service</p>
-        </div>
-      </div>
-    </footer>
+            </Text>
+          </Stack>
+          <Stack align={'flex-start'}>
+            <Text fontWeight={'500'} fontSize={'lg'} mb={2} color="white">
+              Quick Links
+            </Text>
+            <RouterLink to={'/doctors'}>Find Doctors</RouterLink>
+            <RouterLink to={'/appointments'}>Book Appointment</RouterLink>
+            <RouterLink to={'/about'}>About Us</RouterLink>
+            <RouterLink to={'/chat'}>AI Assistant</RouterLink>
+          </Stack>
+          <Stack align={'flex-start'}>
+            <Text fontWeight={'500'} fontSize={'lg'} mb={2} color="white">
+              Services
+            </Text>
+            <Text>Cardiology</Text>
+            <Text>Dermatology</Text>
+            <Text>Pediatrics</Text>
+            <Text>Orthopedics</Text>
+          </Stack>
+          <Stack align={'flex-start'}>
+            <Text fontWeight={'500'} fontSize={'lg'} mb={2} color="white">
+              Contact Us
+            </Text>
+            <HStack>
+              <Icon as={Phone} color="blue.400" />
+              <Text>+1 (555) 123-4567</Text>
+            </HStack>
+            <HStack>
+              <Icon as={Mail} color="blue.400" />
+              <Text>support@careconnect.com</Text>
+            </HStack>
+            <HStack>
+              <Icon as={MapPin} color="blue.400" />
+              <Text>123 Healthcare St, Medical City</Text>
+            </HStack>
+          </Stack>
+        </SimpleGrid>
+      </Container>
+      <Box
+        borderTopWidth={1}
+        borderStyle={'solid'}
+        borderColor={useColorModeValue('gray.700', 'gray.700')}
+      >
+        <Container
+          as={Stack}
+          maxW={'7xl'}
+          py={4}
+          direction={{ base: 'column', md: 'row' }}
+          spacing={4}
+          justify={{ base: 'center', md: 'space-between' }}
+          align={{ base: 'center', md: 'center' }}
+        >
+          <Text>© 2024 CareConnect. All rights reserved.</Text>
+          <Stack direction={'row'} spacing={6}>
+            <RouterLink to={'#'}>Privacy Policy</RouterLink>
+            <RouterLink to={'#'}>Terms of Service</RouterLink>
+          </Stack>
+        </Container>
+      </Box>
+    </MotionBox>
   );
-};
-
-export default Footer;
+}

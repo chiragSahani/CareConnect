@@ -1,11 +1,34 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import {
+  Box,
+  Container,
+  Heading,
+  Text,
+  SimpleGrid,
+  Icon,
+  VStack,
+  useColorModeValue,
+  Flex,
+  Button,
+  useToast,
+  HStack,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  Image,
+  Divider,
+} from '@chakra-ui/react';
 import { Calendar, Clock, User, Phone, FileText, CheckCircle, XCircle } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { format } from 'date-fns';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+const MotionBox = motion(Box);
 
 const Appointments: React.FC = () => {
-  const { appointments, doctors } = useApp();
+  const { appointments, doctors, setAppointments } = useApp();
+  const toast = useToast();
 
   const getDoctor = (doctorId: string) => {
     return doctors.find(d => d.id === doctorId);
@@ -14,145 +37,196 @@ const Appointments: React.FC = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return CheckCircle;
       case 'cancelled':
-        return <XCircle className="h-5 w-5 text-red-500" />;
+        return XCircle;
       default:
-        return <Clock className="h-5 w-5 text-yellow-500" />;
+        return Clock;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return 'bg-green-100 text-green-800';
+        return 'green';
       case 'cancelled':
-        return 'bg-red-100 text-red-800';
+        return 'red';
       default:
-        return 'bg-yellow-100 text-yellow-800';
+        return 'yellow';
     }
+  };
+
+  const clearAppointments = () => {
+    localStorage.removeItem('appointments');
+    setAppointments([]);
+    toast({
+      title: 'Appointments cleared.',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
   };
 
   if (appointments.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
+      <Box bg="gray.50" minH="100vh" py={20}>
+        <Container maxW="4xl">
+          <MotionBox
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center"
+            textAlign="center"
           >
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">My Appointments</h1>
-            
-            <div className="bg-white rounded-xl shadow-lg p-12">
-              <div className="bg-gray-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
-                <Calendar className="h-12 w-12 text-gray-400" />
-              </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">No appointments yet</h2>
-              <p className="text-gray-600 mb-8">You haven't booked any appointments. Start by finding a doctor.</p>
-              <a
-                href="/doctors"
-                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            <Heading as="h1" size="2xl" mb={8}>
+              My Appointments
+            </Heading>
+            <Box bg="white" rounded="xl" shadow="lg" p={12}>
+              <Box
+                bg="gray.100"
+                rounded="full"
+                w={24}
+                h={24}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                mx="auto"
+                mb={6}
               >
-                Find Doctors
-              </a>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+                <Icon as={Calendar} w={12} h={12} color="gray.400" />
+              </Box>
+              <Heading as="h2" size="lg" mb={4}>
+                No appointments yet
+              </Heading>
+              <Text color="gray.600" mb={8}>
+                You haven't booked any appointments. Start by finding a doctor.
+              </Text>
+              <Link to="/doctors">
+                <Button colorScheme="blue" size="lg">
+                  Find Doctors
+                </Button>
+              </Link>
+            </Box>
+          </MotionBox>
+        </Container>
+      </Box>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
+    <Box bg="gray.50" minH="100vh" py={8}>
+      <Container maxW="4xl">
+        <MotionBox
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-8"
+          mb={8}
         >
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Appointments</h1>
-          <p className="text-gray-600">Manage your upcoming and past appointments</p>
-        </motion.div>
+          <Heading as="h1" size="2xl" mb={2}>
+            My Appointments
+          </Heading>
+          <Text color="gray.600">
+            Manage your upcoming and past appointments
+          </Text>
+        </MotionBox>
 
-        <div className="space-y-6">
+        <Flex justify="flex-end" mb={8}>
+          <Button colorScheme="red" onClick={clearAppointments}>
+            Clear All Appointments
+          </Button>
+        </Flex>
+
+        <Stack spacing={6}>
           {appointments.map((appointment, index) => {
             const doctor = getDoctor(appointment.doctorId);
             if (!doctor) return null;
 
             return (
-              <motion.div
+              <MotionBox
                 key={appointment.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 * index }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                bg="white"
+                rounded="xl"
+                shadow="lg"
+                overflow="hidden"
+                _hover={{ shadow: 'xl' }}
               >
-                <div className="p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                    <div className="flex items-start space-x-4 mb-4 lg:mb-0">
-                      <img
+                <Box p={6}>
+                  <Flex direction={{ base: 'column', lg: 'row' }} justify="space-between">
+                    <HStack spacing={4} mb={{ base: 4, lg: 0 }}>
+                      <Image
                         src={doctor.image}
                         alt={doctor.name}
-                        className="w-16 h-16 rounded-full object-cover"
+                        w={16}
+                        h={16}
+                        rounded="full"
+                        objectFit="cover"
                       />
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-1">{doctor.name}</h3>
-                        <p className="text-blue-600 font-medium mb-2">{doctor.specialization}</p>
-                        
-                        <div className="space-y-1">
-                          <div className="flex items-center space-x-2 text-sm text-gray-600">
-                            <Calendar className="h-4 w-4" />
-                            <span>{format(new Date(appointment.date), 'EEEE, MMMM d, yyyy')}</span>
-                          </div>
-                          <div className="flex items-center space-x-2 text-sm text-gray-600">
-                            <Clock className="h-4 w-4" />
-                            <span>{appointment.time}</span>
-                          </div>
-                          <div className="flex items-center space-x-2 text-sm text-gray-600">
-                            <User className="h-4 w-4" />
-                            <span>{appointment.patientName}</span>
-                          </div>
-                          <div className="flex items-center space-x-2 text-sm text-gray-600">
-                            <Phone className="h-4 w-4" />
-                            <span>{appointment.patientPhone}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      <Box>
+                        <Heading as="h3" size="lg" mb={1}>
+                          {doctor.name}
+                        </Heading>
+                        <Text color="blue.500" fontWeight="medium" mb={2}>
+                          {doctor.specialization}
+                        </Text>
+                        <VStack align="flex-start" spacing={1} color="gray.600" fontSize="sm">
+                          <HStack>
+                            <Icon as={Calendar} w={4} h={4} />
+                            <Text>{format(new Date(appointment.date), 'EEEE, MMMM d, yyyy')}</Text>
+                          </HStack>
+                          <HStack>
+                            <Icon as={Clock} w={4} h={4} />
+                            <Text>{appointment.time}</Text>
+                          </HStack>
+                          <HStack>
+                            <Icon as={User} w={4} h={4} />
+                            <Text>{appointment.patientName}</Text>
+                          </HStack>
+                          <HStack>
+                            <Icon as={Phone} w={4} h={4} />
+                            <Text>{appointment.patientPhone}</Text>
+                          </HStack>
+                        </VStack>
+                      </Box>
+                    </HStack>
 
-                    <div className="flex flex-col items-start lg:items-end space-y-3">
-                      <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(appointment.status)}`}>
-                        {getStatusIcon(appointment.status)}
-                        <span className="capitalize">{appointment.status}</span>
-                      </div>
-                      
-                      <div className="text-sm text-gray-500">
+                    <VStack align={{ base: 'flex-start', lg: 'flex-end' }} spacing={3}>
+                      <Tag
+                        size="lg"
+                        variant="subtle"
+                        colorScheme={getStatusColor(appointment.status)}
+                      >
+                        <TagLeftIcon boxSize="12px" as={getStatusIcon(appointment.status)} />
+                        <TagLabel textTransform="capitalize">{appointment.status}</TagLabel>
+                      </Tag>
+                      <Text fontSize="sm" color="gray.500">
                         Booked on {format(new Date(appointment.createdAt), 'MMM d, yyyy')}
-                      </div>
-                    </div>
-                  </div>
+                      </Text>
+                    </VStack>
+                  </Flex>
 
                   {appointment.symptoms && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <div className="flex items-start space-x-2">
-                        <FileText className="h-4 w-4 text-gray-400 mt-1" />
-                        <div>
-                          <div className="text-sm font-medium text-gray-900 mb-1">Symptoms/Reason:</div>
-                          <div className="text-sm text-gray-600">{appointment.symptoms}</div>
-                        </div>
-                      </div>
-                    </div>
+                    <>
+                      <Divider my={4} />
+                      <HStack align="flex-start">
+                        <Icon as={FileText} color="gray.400" mt={1} />
+                        <Box>
+                          <Text fontWeight="medium" mb={1}>
+                            Symptoms/Reason:
+                          </Text>
+                          <Text color="gray.600">{appointment.symptoms}</Text>
+                        </Box>
+                      </HStack>
+                    </>
                   )}
-                </div>
-              </motion.div>
+                </Box>
+              </MotionBox>
             );
           })}
-        </div>
-      </div>
-    </div>
+        </Stack>
+      </Container>
+    </Box>
   );
 };
 

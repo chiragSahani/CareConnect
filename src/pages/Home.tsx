@@ -16,6 +16,7 @@ import {
 import { ArrowForwardIcon, StarIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
 import { Search, Calendar, Shield, Clock } from 'lucide-react';
+import CountUp from 'react-countup';
 
 const MotionBox = motion(Box);
 
@@ -48,10 +49,10 @@ const Home: React.FC = () => {
   ];
 
   const stats = [
-    { number: '500+', label: 'Doctors' },
-    { number: '10,000+', label: 'Happy Patients' },
-    { number: '25+', label: 'Specialties' },
-    { number: '4.9/5', label: 'Rating' },
+    { number: 500, label: 'Doctors' },
+    { number: 10000, label: 'Happy Patients' },
+    { number: 25, label: 'Specialties' },
+    { number: 4.9, label: 'Rating' },
   ];
 
   return (
@@ -93,7 +94,8 @@ const Home: React.FC = () => {
                   textAlign="center"
                 >
                   <Text fontSize={{ base: '2xl', md: '3xl' }} fontWeight="bold" color="blue.500">
-                    {stat.number}
+                    <CountUp end={stat.number} duration={2.75} separator="," />
+                    {index === 3 ? '' : '+'}
                   </Text>
                   <Text fontSize="sm" color="gray.600">
                     {stat.label}
