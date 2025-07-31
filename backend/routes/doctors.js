@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const { mockDoctors } = require('../../src/data/mockData');
+const { mockDoctors } = require('../data/mockData');
 
 // @route   GET api/doctors
 // @desc    Get all doctors

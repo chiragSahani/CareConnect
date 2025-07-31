@@ -19,7 +19,7 @@ This guide will walk you through the process of deploying the backend of this ap
    - **Root Directory:** Set the "Root Directory" to `backend`. This is important because our backend code is in the `backend` subdirectory.
    - **Environment:** Select "Node".
    - **Build Command:** The build command should be `npm install`.
-   - **Start Command:** The start command should be `npm start`.
+   - **Start Command:** The start command should be `node server.js`.
 
 3. **Add Environment Variables:**
    - In the "Environment" section of your web service settings, click "Add Environment Variable".
