@@ -11,6 +11,9 @@
     "start": "nodemon backend/server.js"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
     "axios": "^1.7.2",
     "@google/genai": "^1.12.0",
     "@hookform/resolvers": "^5.2.1",
