@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as api from '../api';
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const { data } = await api.signIn(formData);
       localStorage.setItem('profile', JSON.stringify(data));
-      history.push('/');
+      navigate('/');
     } catch (error) {
       console.log(error);
     }

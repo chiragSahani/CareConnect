@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as api from '../api';
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,7 +15,7 @@ const Register: React.FC = () => {
     try {
       const { data } = await api.signUp(formData);
       localStorage.setItem('profile', JSON.stringify(data));
-      history.push('/');
+      navigate('/');
     } catch (error) {
       console.log(error);
     }
