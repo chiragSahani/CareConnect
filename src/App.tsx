@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AppProvider } from './contexts/AppContext';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -10,30 +10,40 @@ import BookAppointment from './pages/BookAppointment';
 import Appointments from './pages/Appointments';
 import Chat from './pages/Chat';
 import About from './pages/About';
+import PageTransition from './components/common/PageTransition';
+import { AnimatePresence } from 'framer-motion';
 
 function App() {
+  const location = useLocation();
+
   return (
     <AppProvider>
-      <Router>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/doctors" element={<Doctors />} />
-              <Route path="/doctors/:id" element={<DoctorProfile />} />
-              <Route path="/book/:id" element={<BookAppointment />} />
-              <Route path="/appointments" element={<Appointments />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/about" element={<About />} />
-              <Route path="*" element={<Home />} />
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1">
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+              <Route path="/doctors" element={<PageTransition><Doctors /></PageTransition>} />
+              <Route path="/doctors/:id" element={<PageTransition><DoctorProfile /></PageTransition>} />
+              <Route path="/book/:id" element={<PageTransition><BookAppointment /></PageTransition>} />
+              <Route path="/appointments" element={<PageTransition><Appointments /></PageTransition>} />
+              <Route path="/chat" element={<PageTransition><Chat /></PageTransition>} />
+              <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+              <Route path="*" element={<PageTransition><Home /></PageTransition>} />
             </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
+          </AnimatePresence>
+        </main>
+        <Footer />
+      </div>
     </AppProvider>
   );
 }
 
-export default App;
+const AppWrapper = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default AppWrapper;

@@ -1,6 +1,22 @@
 import React from 'react';
+import {
+  Box,
+  Container,
+  Heading,
+  Text,
+  SimpleGrid,
+  Icon,
+  VStack,
+  useColorModeValue,
+  Flex,
+  Button,
+} from '@chakra-ui/react';
+import { Heart, Shield, Users, Target, Globe, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Heart, Users, Award, Globe, Target, Shield } from 'lucide-react';
+import CountUp from 'react-countup';
+import { Link } from 'react-router-dom';
+
+const MotionBox = motion(Box);
 
 const About: React.FC = () => {
   const values = [
@@ -37,182 +53,192 @@ const About: React.FC = () => {
   ];
 
   const stats = [
-    { number: '500+', label: 'Healthcare Professionals' },
-    { number: '10,000+', label: 'Happy Patients' },
-    { number: '25+', label: 'Medical Specialties' },
-    { number: '99.9%', label: 'Platform Uptime' },
+    { number: 500, label: 'Healthcare Professionals' },
+    { number: 10000, label: 'Happy Patients' },
+    { number: 25, label: 'Medical Specialties' },
+    { number: 99.9, label: 'Platform Uptime' },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-50 via-white to-teal-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
+    <Box>
+      <Box bg={useColorModeValue('gray.50', 'gray.800')} py={20}>
+        <Container maxW="7xl">
+          <MotionBox
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center"
+            textAlign="center"
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              About <span className="text-blue-600">CareConnect</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              We're revolutionizing healthcare by making it easier for patients to connect with qualified medical professionals. 
+            <Heading as="h1" size="3xl" mb={6}>
+              About <Text as="span" color="blue.500">CareConnect</Text>
+            </Heading>
+            <Text fontSize="xl" color="gray.600" maxW="3xl" mx="auto">
+              We're revolutionizing healthcare by making it easier for patients to connect with qualified medical professionals.
               Our mission is to provide accessible, quality healthcare for everyone.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+            </Text>
+          </MotionBox>
+        </Container>
+      </Box>
 
-      {/* Mission Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
+      <Box py={20}>
+        <Container maxW="7xl">
+          <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={12} alignItems="center">
+            <MotionBox
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Our Mission</h2>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                At CareConnect, we believe healthcare should be accessible, transparent, and patient-focused. 
-                We're building a platform that removes barriers between patients and healthcare providers, 
+              <Heading as="h2" size="2xl" mb={6}>
+                Our Mission
+              </Heading>
+              <Text fontSize="lg" color="gray.600" mb={6} lineHeight="tall">
+                At CareConnect, we believe healthcare should be accessible, transparent, and patient-focused.
+                We're building a platform that removes barriers between patients and healthcare providers,
                 making it easier than ever to find, connect with, and book appointments with qualified medical professionals.
-              </p>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Our AI-powered assistant provides 24/7 support, helping patients navigate their healthcare journey 
+              </Text>
+              <Text fontSize="lg" color="gray.600" lineHeight="tall">
+                Our AI-powered assistant provides 24/7 support, helping patients navigate their healthcare journey
                 and get the information they need, when they need it.
-              </p>
-            </motion.div>
-            
-            <motion.div
+              </Text>
+            </MotionBox>
+            <MotionBox
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="relative"
             >
-              <img
+              <Image
                 src="https://images.pexels.com/photos/4033148/pexels-photo-4033148.jpeg?auto=compress&cs=tinysrgb&w=600"
                 alt="Healthcare team"
-                className="w-full h-96 object-cover rounded-xl shadow-lg"
+                rounded="xl"
+                shadow="lg"
               />
-            </motion.div>
-          </div>
-        </div>
-      </section>
+            </MotionBox>
+          </SimpleGrid>
+        </Container>
+      </Box>
 
-      {/* Values Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
+      <Box py={20} bg={useColorModeValue('gray.50', 'gray.800')}>
+        <Container maxW="7xl">
+          <MotionBox
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            textAlign="center"
+            mb={16}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Values</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <Heading as="h2" size="2xl" mb={4}>
+              Our Values
+            </Heading>
+            <Text fontSize="xl" color="gray.600" maxW="3xl" mx="auto">
               These core values guide everything we do and shape how we serve our community
-            </p>
-          </motion.div>
+            </Text>
+          </MotionBox>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
             {values.map((value, index) => (
-              <motion.div
+              <MotionBox
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 * index }}
                 viewport={{ once: true }}
-                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+                bg="white"
+                p={6}
+                rounded="xl"
+                shadow="lg"
+                _hover={{ shadow: 'xl' }}
               >
-                <div className="bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <value.icon className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{value.title}</h3>
-                <p className="text-gray-600">{value.description}</p>
-              </motion.div>
+                <Flex
+                  w={12}
+                  h={12}
+                  rounded="lg"
+                  bg="blue.100"
+                  align="center"
+                  justify="center"
+                  mb={4}
+                >
+                  <Icon as={value.icon} w={6} h={6} color="blue.500" />
+                </Flex>
+                <Heading as="h3" size="lg" mb={3}>
+                  {value.title}
+                </Heading>
+                <Text color="gray.600">{value.description}</Text>
+              </MotionBox>
             ))}
-          </div>
-        </div>
-      </section>
+          </SimpleGrid>
+        </Container>
+      </Box>
 
-      {/* Stats Section */}
-      <section className="py-20 bg-blue-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
+      <Box py={20} bg="blue.500">
+        <Container maxW="7xl">
+          <MotionBox
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            textAlign="center"
+            mb={12}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Our Impact</h2>
-            <p className="text-xl text-blue-100">Making a difference in healthcare, one connection at a time</p>
-          </motion.div>
+            <Heading as="h2" size="2xl" color="white" mb={4}>
+              Our Impact
+            </Heading>
+            <Text fontSize="xl" color="blue.100">
+              Making a difference in healthcare, one connection at a time
+            </Text>
+          </MotionBox>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <SimpleGrid columns={{ base: 2, md: 4 }} spacing={8}>
             {stats.map((stat, index) => (
-              <motion.div
+              <MotionBox
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 * index }}
                 viewport={{ once: true }}
-                className="text-center"
+                textAlign="center"
               >
-                <div className="text-4xl md:text-5xl font-bold text-white mb-2">{stat.number}</div>
-                <div className="text-blue-100">{stat.label}</div>
-              </motion.div>
+                <Text fontSize={{ base: '4xl', md: '5xl' }} fontWeight="bold" color="white" mb={2}>
+                  <CountUp end={stat.number} duration={2.75} separator="," />
+                  {index === 3 ? '' : '+'}
+                </Text>
+                <Text color="blue.100">{stat.label}</Text>
+              </MotionBox>
             ))}
-          </div>
-        </div>
-      </section>
+          </SimpleGrid>
+        </Container>
+      </Box>
 
-      {/* Team Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Commitment</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We're committed to continuously improving healthcare accessibility and patient experience through innovation and dedication.
-            </p>
-          </motion.div>
-
-          <motion.div
+      <Box py={20}>
+        <Container maxW="7xl">
+          <MotionBox
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-r from-blue-50 to-teal-50 rounded-2xl p-8 md:p-12 text-center"
+            bgGradient="linear(to-r, blue.50, teal.50)"
+            rounded="2xl"
+            p={{ base: 8, md: 12 }}
+            textAlign="center"
           >
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+            <Heading as="h3" size="2xl" mb={4}>
               Ready to Experience Better Healthcare?
-            </h3>
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join thousands of patients who trust CareConnect for their healthcare needs. 
+            </Heading>
+            <Text fontSize="lg" color="gray.600" mb={8} maxW="2xl" mx="auto">
+              Join thousands of patients who trust CareConnect for their healthcare needs.
               Start your journey to better health today.
-            </p>
-            <a
-              href="/doctors"
-              className="inline-flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-            >
-              Find a Doctor Today
-            </a>
-          </motion.div>
-        </div>
-      </section>
-    </div>
+            </Text>
+            <Link to="/doctors">
+              <Button colorScheme="blue" size="lg">
+                Find a Doctor Today
+              </Button>
+            </Link>
+          </MotionBox>
+        </Container>
+      </Box>
+    </Box>
   );
 };
 
