@@ -1,6 +1,4 @@
-import { Doctor } from '../types';
-
-export const mockDoctors: Doctor[] = [
+const mockDoctors = [
   {
     id: '1',
     name: 'Dr. Sarah Johnson',
@@ -195,3 +193,5 @@ export const mockDoctors: Doctor[] = [
     ]
   }
 ];
+
+module.exports = { mockDoctors };
