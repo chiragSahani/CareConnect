@@ -1,24 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const { mockDoctors } = require('../data/mockData');
+const doctorController = require('../controllers/doctor.controller.js');
 
 // @route   GET api/doctors
 // @desc    Get all doctors
 // @access  Private
-router.get('/', auth, (req, res) => {
-  res.json(mockDoctors);
-});
+router.get('/', auth, doctorController.findAll);
 
 // @route   GET api/doctors/:id
 // @desc    Get doctor by ID
 // @access  Private
-router.get('/:id', auth, (req, res) => {
-  const doctor = mockDoctors.find(doc => doc.id === req.params.id);
-  if (!doctor) {
-    return res.status(404).json({ msg: 'Doctor not found' });
-  }
-  res.json(doctor);
-});
+router.get('/:id', auth, doctorController.findOne);
 
 module.exports = router;
