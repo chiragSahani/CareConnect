@@ -10,7 +10,6 @@ import BookAppointment from './pages/BookAppointment';
 import Appointments from './pages/Appointments';
 import Chat from './pages/Chat';
 import About from './pages/About';
-import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -27,7 +26,6 @@ function App() {
               <Route path="/appointments" element={<Appointments />} />
               <Route path="/chat" element={<Chat />} />
               <Route path="/about" element={<About />} />
-              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="*" element={<Home />} />
             </Routes>
           </main>
