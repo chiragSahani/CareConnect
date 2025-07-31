@@ -1,9 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Doctor, Appointment, ChatMessage } from '../types';
-import { mockDoctors } from '../data/mockData';
-
 interface AppContextType {
   doctors: Doctor[];
+  setDoctors: (doctors: Doctor[]) => void;
   appointments: Appointment[];
   chatMessages: ChatMessage[];
   addAppointment: (appointment: Omit<Appointment, 'id' | 'createdAt'>) => void;
@@ -26,7 +25,7 @@ export const useApp = () => {
 };
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [doctors] = useState<Doctor[]>(mockDoctors);
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -57,6 +56,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     <AppContext.Provider
       value={{
         doctors,
+        setDoctors,
         appointments,
         chatMessages,
         addAppointment,
