@@ -11,6 +11,7 @@ import Appointments from './pages/Appointments';
 import Chat from './pages/Chat';
 import About from './pages/About';
 import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path="/chat" element={<Chat />} />
               <Route path="/about" element={<About />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </main>
           <Footer />
