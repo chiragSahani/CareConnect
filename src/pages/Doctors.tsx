@@ -1,12 +1,26 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, Filter, Star, MapPin, Clock, DollarSign } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
+import * as api from '../api';
+import { Doctor } from '../types';
 
 const Doctors: React.FC = () => {
-  const { doctors, searchQuery, setSearchQuery, selectedSpecialization, setSelectedSpecialization } = useApp();
+  const { doctors, setDoctors, searchQuery, setSearchQuery, selectedSpecialization, setSelectedSpecialization } = useApp();
   const [showFilters, setShowFilters] = useState(false);
+
+  useEffect(() => {
+    const getDoctors = async () => {
+      try {
+        const { data } = await api.fetchDoctors();
+        setDoctors(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDoctors();
+  }, [setDoctors]);
 
   const specializations = [...new Set(doctors.map(doctor => doctor.specialization))];
 

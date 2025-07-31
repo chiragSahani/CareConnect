@@ -1,15 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, Clock, DollarSign, Award, Languages, Calendar, ArrowLeft } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { format } from 'date-fns';
+import * as api from '../api';
+import { Doctor } from '../types';
 
 const DoctorProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { doctors } = useApp();
-  
-  const doctor = doctors.find(d => d.id === id);
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
+
+  useEffect(() => {
+    const getDoctor = async () => {
+      if (id) {
+        try {
+          const { data } = await api.fetchDoctor(id);
+          setDoctor(data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    getDoctor();
+  }, [id]);
 
   if (!doctor) {
     return (

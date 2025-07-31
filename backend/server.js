@@ -11,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/doctors', require('./routes/doctors'));
+app.use('/api/auth', require('./routes/auth'));
 
 app.get('/', (req, res) => {
   res.send('Backend server is running!');
