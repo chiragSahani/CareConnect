@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.node.json",
-  "compilerOptions": {
-    "noEmit": false,
-    "outDir": "./build"
-  },
-  "include": ["src/gemini-test.ts"]
-}
