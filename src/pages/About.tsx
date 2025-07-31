@@ -10,11 +10,13 @@ import {
   useColorModeValue,
   Flex,
   Button,
+  Image,
 } from '@chakra-ui/react';
 import { Heart, Shield, Users, Target, Globe, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 
 const MotionBox = motion(Box);
 
@@ -231,7 +233,7 @@ const About: React.FC = () => {
               Start your journey to better health today.
             </Text>
             <Link to="/doctors">
-              <Button colorScheme="blue" size="lg">
+              <Button colorScheme="blue" size="lg" rightIcon={<ArrowForwardIcon />}>
                 Find a Doctor Today
               </Button>
             </Link>

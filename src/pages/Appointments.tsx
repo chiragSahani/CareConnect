@@ -4,8 +4,6 @@ import {
   Container,
   Heading,
   Text,
-  SimpleGrid,
-  Icon,
   VStack,
   useColorModeValue,
   Flex,
@@ -17,6 +15,8 @@ import {
   TagLeftIcon,
   Image,
   Divider,
+  Icon,
+  Stack,
 } from '@chakra-ui/react';
 import { Calendar, Clock, User, Phone, FileText, CheckCircle, XCircle } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
