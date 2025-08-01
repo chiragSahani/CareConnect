@@ -63,7 +63,7 @@ const Chat: React.FC = () => {
   const getGeminiResponse = async (message: string): Promise<string> => {
     // The API key is left as an empty string. The execution environment
     // will automatically provide the key for the API call for security.
-    const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
     // This detailed system prompt gives the AI its personality, knowledge base, and strict rules.
