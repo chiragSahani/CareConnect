@@ -62,7 +62,7 @@ const About: React.FC = () => {
   ];
 
   return (
-    <Box>
+    <Box pt={18}>
       <Box bg={useColorModeValue('gray.50', 'gray.800')} py={20}>
         <Container maxW="7xl">
           <MotionBox

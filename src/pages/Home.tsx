@@ -56,7 +56,7 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <Box>
+    <Box pt={18}>
       {/* Hero Section */}
       <Container maxW="7xl" py={{ base: 20, md: 32 }}>
         <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={12} alignItems="center">
