@@ -36,8 +36,8 @@ A comprehensive, modern healthcare appointment platform built with React, TypeSc
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd careconnect
+   git clone https://github.com/chiragSahani/CareConnect.git
+   cd careConnect
    ```
 
 2. **Install dependencies**
