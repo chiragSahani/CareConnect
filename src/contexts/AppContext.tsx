@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Doctor, Appointment, ChatMessage } from '../types';
 interface AppContextType {
   doctors: Doctor[];
@@ -27,13 +27,17 @@ export const useApp = () => {
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [appointments, setAppointments] = useState<Appointment[]>(() => {
-    const savedAppointments = localStorage.getItem('appointments');
-    return savedAppointments ? JSON.parse(savedAppointments) : [];
-  });
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialization, setSelectedSpecialization] = useState('');
+
+  useEffect(() => {
+    const savedAppointments = localStorage.getItem('appointments');
+    if (savedAppointments) {
+      setAppointments(JSON.parse(savedAppointments));
+    }
+  }, []);
 
   const addAppointment = (appointmentData: Omit<Appointment, 'id' | 'createdAt'>) => {
     const newAppointment: Appointment = {
