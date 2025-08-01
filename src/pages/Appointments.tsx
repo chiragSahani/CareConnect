@@ -30,11 +30,12 @@ import { useApp } from '../contexts/AppContext';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 const MotionBox = motion(Box);
 
 const Appointments: React.FC = () => {
-  const { appointments, doctors, setAppointments } = useApp();
+  const { appointments, doctors, setAppointments, isLoadingAppointments } = useApp();
   const toast = useToast();
 
   const getDoctor = (doctorId: string) => doctors.find(d => d.id === doctorId);
@@ -71,6 +72,14 @@ const Appointments: React.FC = () => {
       isClosable: true,
     });
   };
+
+  if (isLoadingAppointments) {
+    return (
+      <Box bg="gray.50" minH="100vh" display="flex" alignItems="center" justifyContent="center">
+        <LoadingSpinner size="xl" />
+      </Box>
+    );
+  }
 
   if (appointments.length === 0) {
     return (
