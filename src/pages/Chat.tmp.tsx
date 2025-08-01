@@ -18,7 +18,7 @@ const Chat: React.FC = () => {
   const getGeminiResponse = async (message: string): Promise<string> => {
     // The API key is left as an empty string. The execution environment
     // will automatically provide the key for the API call for security.
-    const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+    const apiKey = "AIzaSyAi7Z8tvvIykNt0BtjHb10kh-pm_mlXKJk";
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
     // This detailed system prompt gives the AI its personality, knowledge base, and strict rules.
@@ -107,7 +107,7 @@ Your goal is to be a helpful and trustworthy guide to the CareConnect app.`
 
     try {
       const botResponse = await getGeminiResponse(userMessage);
-      
+
       addChatMessage({
         type: 'bot',
         content: botResponse,
@@ -152,7 +152,7 @@ Your goal is to be a helpful and trustworthy guide to the CareConnect app.`
                 <p className="text-gray-500 text-sm">Online and ready to help</p>
               </div>
             </div>
-            
+
             {chatMessages.length > 0 && (
               <button
                 onClick={clearChat}
