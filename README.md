@@ -3,7 +3,7 @@
 
 <p align="center">
   <a href="https://care-connect-niroggyan.netlify.app/" target="_blank">
-    <img src="https://img.shields.io/badge/🌐 https://care-connect-niroggyan.netlify.app/?style=for-the-badge&logo=vercel" alt="Live Demo"/>
+    <img src="https://img.shields.io/badge/🚀🌐 Live Demo-blueviolet?style=for-the-badge&logo=vercel" alt="Live Demo"/>
   </a>
   <a href="https://github.com/chiragSahani/CareConnect" target="_blank">
     <img src="https://img.shields.io/badge/GitHub-Repo-black?style=for-the-badge&logo=github" alt="GitHub Repo"/>
