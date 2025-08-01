@@ -5,6 +5,7 @@ interface AppContextType {
   setDoctors: (doctors: Doctor[]) => void;
   appointments: Appointment[];
   setAppointments: (appointments: Appointment[]) => void;
+  isLoadingAppointments: boolean;
   chatMessages: ChatMessage[];
   addAppointment: (appointment: Omit<Appointment, 'id' | 'createdAt'>) => void;
   addChatMessage: (message: Omit<ChatMessage, 'id'>) => void;
@@ -28,6 +29,7 @@ export const useApp = () => {
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [isLoadingAppointments, setIsLoadingAppointments] = useState(true);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialization, setSelectedSpecialization] = useState('');
@@ -37,6 +39,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (savedAppointments) {
       setAppointments(JSON.parse(savedAppointments));
     }
+    setIsLoadingAppointments(false);
   }, []);
 
   const addAppointment = (appointmentData: Omit<Appointment, 'id' | 'createdAt'>) => {
@@ -71,6 +74,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         setDoctors,
         appointments,
         setAppointments,
+        isLoadingAppointments,
         chatMessages,
         addAppointment,
         addChatMessage,
