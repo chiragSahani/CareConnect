@@ -178,7 +178,7 @@ Your goal is to be a helpful and trustworthy guide to the CareConnect app.`
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center font-sans">
+    <div className="min-h-screen pt-24 pb-8 font-sans">
       <div className="w-full max-w-2xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
