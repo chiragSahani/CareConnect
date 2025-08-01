@@ -5,10 +5,9 @@ import {
   Heading,
   Text,
   VStack,
-  useColorModeValue,
+  useToast,
   Flex,
   Button,
-  useToast,
   HStack,
   Tag,
   TagLabel,
@@ -18,7 +17,15 @@ import {
   Icon,
   Stack,
 } from '@chakra-ui/react';
-import { Calendar, Clock, User, Phone, FileText, CheckCircle, XCircle } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  User,
+  Phone,
+  FileText,
+  CheckCircle,
+  XCircle,
+} from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
@@ -30,9 +37,7 @@ const Appointments: React.FC = () => {
   const { appointments, doctors, setAppointments } = useApp();
   const toast = useToast();
 
-  const getDoctor = (doctorId: string) => {
-    return doctors.find(d => d.id === doctorId);
-  };
+  const getDoctor = (doctorId: string) => doctors.find(d => d.id === doctorId);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -153,13 +158,25 @@ const Appointments: React.FC = () => {
                 _hover={{ shadow: 'xl' }}
               >
                 <Box p={6}>
-                  <Flex direction={{ base: 'column', lg: 'row' }} justify="space-between">
-                    <HStack spacing={4} mb={{ base: 4, lg: 0 }}>
+                  <Flex
+                    direction={{ base: 'column', lg: 'row' }}
+                    justify="space-between"
+                    gap={4}
+                  >
+                    <Flex
+                      direction={{ base: 'column', md: 'row' }}
+                      gap={4}
+                      flex="1"
+                      align="flex-start"
+                      wrap="wrap"
+                    >
                       <Image
                         src={doctor.image}
                         alt={doctor.name}
                         w={16}
                         h={16}
+                        minW={16}
+                        minH={16}
                         rounded="full"
                         objectFit="cover"
                       />
@@ -170,10 +187,17 @@ const Appointments: React.FC = () => {
                         <Text color="blue.500" fontWeight="medium" mb={2}>
                           {doctor.specialization}
                         </Text>
-                        <VStack align="flex-start" spacing={1} color="gray.600" fontSize="sm">
+                        <VStack
+                          align="flex-start"
+                          spacing={1}
+                          color="gray.600"
+                          fontSize="sm"
+                        >
                           <HStack>
                             <Icon as={Calendar} w={4} h={4} />
-                            <Text>{format(new Date(appointment.date), 'EEEE, MMMM d, yyyy')}</Text>
+                            <Text>
+                              {format(new Date(appointment.date), 'EEEE, MMMM d, yyyy')}
+                            </Text>
                           </HStack>
                           <HStack>
                             <Icon as={Clock} w={4} h={4} />
@@ -189,21 +213,31 @@ const Appointments: React.FC = () => {
                           </HStack>
                         </VStack>
                       </Box>
-                    </HStack>
+                    </Flex>
 
-                    <VStack align={{ base: 'flex-start', lg: 'flex-end' }} spacing={3}>
+                    <Box
+                      mt={{ base: 4, lg: 0 }}
+                      textAlign={{ base: 'left', lg: 'right' }}
+                      minW={{ lg: '200px' }}
+                    >
                       <Tag
                         size="lg"
                         variant="subtle"
                         colorScheme={getStatusColor(appointment.status)}
+                        mb={2}
                       >
-                        <TagLeftIcon boxSize="12px" as={getStatusIcon(appointment.status)} />
-                        <TagLabel textTransform="capitalize">{appointment.status}</TagLabel>
+                        <TagLeftIcon
+                          boxSize="12px"
+                          as={getStatusIcon(appointment.status)}
+                        />
+                        <TagLabel textTransform="capitalize">
+                          {appointment.status}
+                        </TagLabel>
                       </Tag>
                       <Text fontSize="sm" color="gray.500">
                         Booked on {format(new Date(appointment.createdAt), 'MMM d, yyyy')}
                       </Text>
-                    </VStack>
+                    </Box>
                   </Flex>
 
                   {appointment.symptoms && (
