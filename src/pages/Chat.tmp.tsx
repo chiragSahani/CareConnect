@@ -2,7 +2,52 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Trash2, MessageCircle } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
-import LoadingSpinner from '../components/common/LoadingSpinner';
+
+// A simple component to render basic markdown (bold and lists)
+const MarkdownRenderer: React.FC<{ content: string }> = ({ content }) => {
+  const lines = content.split('\n');
+  const elements: JSX.Element[] = [];
+  let listItems: string[] = [];
+
+  const flushList = () => {
+    if (listItems.length > 0) {
+      elements.push(
+        <ul key={`ul-${elements.length}`} className="list-disc list-inside space-y-1 my-2">
+          {listItems.map((item, i) => {
+            const parts = item.split(/\*\*(.*?)\*\*/g);
+            return (
+              <li key={i}>
+                {parts.map((part, j) => (j % 2 === 1 ? <strong key={j}>{part}</strong> : part))}
+              </li>
+            );
+          })}
+        </ul>
+      );
+      listItems = [];
+    }
+  };
+
+  lines.forEach((line, index) => {
+    if (line.trim().startsWith('* ')) {
+      listItems.push(line.trim().substring(2));
+    } else {
+      flushList();
+      if (line.trim()) {
+        const parts = line.split(/\*\*(.*?)\*\*/g);
+        elements.push(
+          <p key={index}>
+            {parts.map((part, j) => (j % 2 === 1 ? <strong key={j}>{part}</strong> : part))}
+          </p>
+        );
+      }
+    }
+  });
+
+  flushList(); // Add any remaining list items
+
+  return <>{elements}</>;
+};
+
 
 const Chat: React.FC = () => {
   const { chatMessages, addChatMessage, clearChat } = useApp();
@@ -36,7 +81,7 @@ const Chat: React.FC = () => {
 * **Customer Support:** You can guide users on how to contact our support team for any technical or billing issues.
 
 **Your Responsibilities:**
-* **Guide Users:** Clearly explain how to use the features mentioned above.
+* **Guide Users:** Clearly explain how to use the features mentioned above. Use markdown for lists and bold text to improve readability.
 * **Provide Information:** Answer general questions about the consultation process (e.g., "How do I start my video call?", "Where can I find my prescription?").
 * **Maintain a Professional Tone:** Your responses must be empathetic, clear, patient, and professional. Use proper grammar and formatting (like lists) to make information easy to understand.
 * **ABSOLUTE SAFETY RULE:** You must **NEVER** provide any medical advice, diagnosis, interpretation of symptoms, or treatment recommendations. If a user asks for medical help (e.g., "I have a headache, what should I do?"), you MUST immediately and politely decline and advise them to consult with a qualified doctor on our platform.
@@ -47,7 +92,7 @@ Your goal is to be a helpful and trustworthy guide to the CareConnect app.`
       {
         role: "model",
         parts: [{
-          text: "Understood. I am CareConnect AI. I will help users by explaining the app's features like booking appointments, video consultations, and managing records. I will maintain a professional and empathetic tone. I will **never** provide medical advice and will always direct users to a qualified doctor for any medical concerns."
+          text: "Understood. I am CareConnect AI. I will help users by explaining the app's features like booking appointments, video consultations, and managing records. I will maintain a professional and empathetic tone, using markdown for clarity. I will **never** provide medical advice and will always direct users to a qualified doctor for any medical concerns."
         }]
       },
       // The current user message is added here
@@ -191,12 +236,16 @@ Your goal is to be a helpful and trustworthy guide to the CareConnect app.`
                         <Bot className="h-6 w-6" />
                      </div>
                   )}
-                  <div className={`max-w-md px-4 py-3 rounded-2xl ${
+                  <div className={`max-w-md px-4 py-3 rounded-2xl text-sm ${
                     message.type === 'user'
                       ? 'bg-blue-600 text-white rounded-br-none'
                       : 'bg-gray-100 text-gray-800 rounded-bl-none'
                   }`}>
-                    <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{message.content}</p>
+                    {message.type === 'bot' ? (
+                      <MarkdownRenderer content={message.content} />
+                    ) : (
+                      <p style={{ whiteSpace: 'pre-wrap' }}>{message.content}</p>
+                    )}
                   </div>
                    {message.type === 'user' && (
                      <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
