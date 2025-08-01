@@ -63,7 +63,6 @@ This project is built with a modern, scalable, and maintainable frontend archite
 | **Icons** | Lucide React                             | A simple and beautiful icon library.                |
 | **Dates** | `date-fns`                               | For modern, reliable date/time manipulation.      |
 | **Build Tool** | Vite                                     | For a blazing fast development and build experience.    |
-| **Charts** | `Chart.js` / `Recharts`                  | For powerful and interactive data visualizations.     |
 
 ### Architectural Overview
 
@@ -116,7 +115,6 @@ src/
 ├── components/     # Reusable UI components
 │   ├── common/     # Generic components (Button, Input, etc.)
 │   ├── layout/     # Structural components (Header, Footer, Sidebar)
-│   └── charts/     # Chart components
 ├── contexts/       # React Context providers for global state
 ├── data/           # Mock data, constants, and static content
 ├── hooks/          # Custom React hooks
