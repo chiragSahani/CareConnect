@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Trash2, MessageCircle } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import ReactMarkdown from 'react-markdown';
 
 const Chat: React.FC = () => {
   const { chatMessages, addChatMessage, clearChat } = useApp();
@@ -13,6 +14,47 @@ const Chat: React.FC = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
+
+  // Function to get response from Gemini API
+  const getGeminiResponse = async (message: string): Promise<string> => {
+    const API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
+    const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+
+    // System instruction to guide the AI's behavior
+    const systemInstruction = {
+        role: "system",
+        parts: [{
+            text: "You are a helpful AI assistant for a healthcare platform called CareConnect. Your role is to guide users on how to use the platform (e.g., booking appointments, finding doctors) and provide general, non-diagnostic health information. You must NEVER provide a medical diagnosis or prescribe treatment. Always advise users to consult a qualified healthcare professional for any medical concerns. Keep your answers concise and helpful."
+        }]
+    };
+
+    const userMessageContent = {
+        role: "user",
+        parts: [{ text: message }]
+    };
+
+    try {
+      const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ contents: [systemInstruction, userMessageContent] }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      // Extract the text from the response
+      return data.candidates[0].content.parts[0].text;
+
+    } catch (error) {
+      console.error("Gemini API Error:", error);
+      return "I apologize, but I'm having trouble connecting to my services right now. Please try again later.";
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
@@ -30,8 +72,8 @@ const Chat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Simulate API call to Gemini (replace with actual API call)
-      const botResponse = await simulateGeminiResponse(userMessage);
+      // Get response from the actual Gemini API
+      const botResponse = await getGeminiResponse(userMessage);
       
       addChatMessage({
         type: 'bot',
@@ -46,60 +88,6 @@ const Chat: React.FC = () => {
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Simulate Gemini API response (replace with actual Gemini API integration)
-  const simulateGeminiResponse = async (message: string): Promise<string> => {
-    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
-
-    const responses = {
-      greeting: [
-        "Hello! I'm your AI healthcare assistant. How can I help you today?",
-        "Hi there! I'm here to assist you with your healthcare questions and help you navigate our platform.",
-        "Welcome to CareConnect's AI assistant. What can I do for you?",
-      ],
-      symptoms: [
-        "I understand you're experiencing some symptoms. While I can provide general information, it's important to consult with a qualified healthcare professional for proper diagnosis and treatment. Would you like me to help you find a suitable doctor?",
-        "Thank you for sharing your symptoms. For your safety, I recommend scheduling an appointment with one of our qualified doctors for a proper evaluation. I can help you find the right specialist.",
-        "Based on the symptoms you've described, it would be best to speak with a doctor. I can help you find a specialist in your area.",
-      ],
-      booking: [
-        "I'd be happy to help you book an appointment! You can browse our available doctors by specialty, check their availability, and book directly through our platform. Would you like me to guide you to our doctor directory?",
-        "Booking an appointment is easy! Simply visit our 'Find Doctors' section, select your preferred specialist, and choose from their available time slots. Is there a particular specialty you're looking for?",
-        "To book an appointment, please go to the 'Appointments' section of our app. From there, you can search for doctors and book an appointment.",
-      ],
-      "find doctor": [
-        "I can help with that. What specialty are you looking for? For example, you can say 'find a cardiologist' or 'find a dermatologist'.",
-        "Absolutely. To find a doctor, please tell me the specialty you are interested in.",
-        "I can help you find a doctor. What type of doctor are you looking for?",
-      ],
-      general: [
-        "That's a great question! While I can provide general health information, I always recommend consulting with our qualified healthcare professionals for personalized advice. Is there anything specific I can help you with regarding our platform?",
-        "I'm here to help! For medical advice, please consult with one of our doctors. For questions about using our platform, booking appointments, or finding the right specialist, I'm at your service.",
-        "I can help with general questions about our platform. For medical advice, please consult a doctor.",
-      ],
-      default: [
-        "I'm sorry, I don't understand. Could you please rephrase your question?",
-        "I'm not sure how to respond to that. Could you please provide more details?",
-        "I am an AI assistant and my knowledge is limited. For more complex questions, please consult a doctor.",
-      ],
-    };
-
-    const lowerMessage = message.toLowerCase();
-
-    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-      return responses.greeting[Math.floor(Math.random() * responses.greeting.length)];
-    } else if (lowerMessage.includes('symptom') || lowerMessage.includes('pain') || lowerMessage.includes('hurt') || lowerMessage.includes('sick')) {
-      return responses.symptoms[Math.floor(Math.random() * responses.symptoms.length)];
-    } else if (lowerMessage.includes('appointment') || lowerMessage.includes('book') || lowerMessage.includes('schedule')) {
-      return responses.booking[Math.floor(Math.random() * responses.booking.length)];
-    } else if (lowerMessage.includes('doctor') || lowerMessage.includes('specialist')) {
-        return responses['find doctor'][Math.floor(Math.random() * responses['find doctor'].length)];
-    } else if (lowerMessage.includes('help')) {
-        return responses.general[Math.floor(Math.random() * responses.general.length)];
-    } else {
-      return responses.default[Math.floor(Math.random() * responses.default.length)];
     }
   };
 
@@ -172,33 +160,39 @@ const Chat: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex items-start space-x-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                    message.type === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-900'
-                  }`}>
-                    <div className="flex items-start space-x-2">
-                      {message.type === 'bot' && (
-                        <Bot className="h-4 w-4 mt-1 text-blue-600" />
-                      )}
-                      {message.type === 'user' && (
-                        <User className="h-4 w-4 mt-1 text-blue-200" />
-                      )}
-                      <div className="flex-1">
-                        <p className="text-sm">{message.content}</p>
-                        <p className={`text-xs mt-1 ${
-                          message.type === 'user' ? 'text-blue-200' : 'text-gray-500'
-                        }`}>
-                          {message.timestamp.toLocaleTimeString([], { 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                          })}
-                        </p>
-                      </div>
+                  {message.type === 'bot' && (
+                    <div className="bg-gray-200 p-2 rounded-full">
+                      <Bot className="h-6 w-6 text-blue-600" />
                     </div>
+                  )}
+
+                  <div
+                    className={`max-w-md rounded-lg px-4 py-3 ${
+                      message.type === 'user'
+                        ? 'bg-blue-600 text-white rounded-br-none'
+                        : 'bg-gray-100 text-gray-900 rounded-bl-none'
+                    }`}
+                  >
+                    <div className="prose prose-sm max-w-none">
+                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                    </div>
+                    <p className={`text-xs mt-2 ${
+                      message.type === 'user' ? 'text-blue-200' : 'text-gray-500'
+                    }`}>
+                      {message.timestamp.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
                   </div>
+
+                  {message.type === 'user' && (
+                    <div className="bg-blue-600 text-white p-2 rounded-full">
+                      <User className="h-6 w-6" />
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </AnimatePresence>
