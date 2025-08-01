@@ -59,79 +59,26 @@ const Chat: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  // Function to get response from Gemini API
+  // Function to get response from the serverless function
   const getGeminiResponse = async (message: string): Promise<string> => {
-    // The API key is left as an empty string. The execution environment
-    // will automatically provide the key for the API call for security.
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-    // This detailed system prompt gives the AI its personality, knowledge base, and strict rules.
-    const chatHistory = [
-      {
-        role: "user",
-        parts: [{
-          text: `You are 'CareConnect AI', a friendly and professional AI assistant for the CareConnect healthcare platform. Your primary role is to help users navigate the app and understand its features.
-
-**Core Features of CareConnect:**
-* **Find & Book Doctors:** Users can search for doctors by specialty, location, and availability, and book appointments instantly.
-* **Video Consultations:** Users can have secure video calls with doctors from the comfort of their home.
-* **Medical Records:** Users can access their prescriptions, lab reports, and consultation notes in one place.
-* **Pharmacy:** Users can order medicines from their prescriptions through our partner pharmacies.
-* **Customer Support:** You can guide users on how to contact our support team for any technical or billing issues.
-
-**Your Responsibilities:**
-* **Guide Users:** Clearly explain how to use the features mentioned above. Use markdown for lists and bold text to improve readability.
-* **Provide Information:** Answer general questions about the consultation process (e.g., "How do I start my video call?", "Where can I find my prescription?").
-* **Maintain a Professional Tone:** Your responses must be empathetic, clear, patient, and professional. Use proper grammar and formatting (like lists) to make information easy to understand.
-* **ABSOLUTE SAFETY RULE:** You must **NEVER** provide any medical advice, diagnosis, interpretation of symptoms, or treatment recommendations. If a user asks for medical help (e.g., "I have a headache, what should I do?"), you MUST immediately and politely decline and advise them to consult with a qualified doctor on our platform.
-
-Your goal is to be a helpful and trustworthy guide to the CareConnect app.`
-        }]
-      },
-      {
-        role: "model",
-        parts: [{
-          text: "Understood. I am CareConnect AI. I will help users by explaining the app's features like booking appointments, video consultations, and managing records. I will maintain a professional and empathetic tone, using markdown for clarity. I will **never** provide medical advice and will always direct users to a qualified doctor for any medical concerns."
-        }]
-      },
-      // The current user message is added here
-      {
-        role: "user",
-        parts: [{ text: message }]
-      }
-    ];
-
-    const payload = { contents: chatHistory };
-
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch('/.netlify/functions/get-gemini-response', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ message }),
       });
 
       if (!response.ok) {
-        const errorBody = await response.text();
-        console.error("API Error Response:", errorBody);
-        throw new Error(`API request failed with status ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Request failed with status ${response.status}`);
       }
 
       const data = await response.json();
-
-      if (data.candidates && data.candidates.length > 0 &&
-          data.candidates[0].content && data.candidates[0].content.parts &&
-          data.candidates[0].content.parts.length > 0) {
-        return data.candidates[0].content.parts[0].text;
-      } else {
-        console.error("Unexpected API response structure:", data);
-        return "I received a response, but couldn't understand it. Please try again.";
-      }
-
+      return data.response;
     } catch (error) {
-      console.error("Gemini API Call Error:", error);
+      console.error("Serverless function error:", error);
       return "I apologize, but I'm having trouble connecting to my services right now. Please try again later.";
     }
   };
