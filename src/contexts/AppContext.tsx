@@ -4,6 +4,7 @@ interface AppContextType {
   doctors: Doctor[];
   setDoctors: (doctors: Doctor[]) => void;
   appointments: Appointment[];
+  setAppointments: (appointments: Appointment[]) => void;
   chatMessages: ChatMessage[];
   addAppointment: (appointment: Omit<Appointment, 'id' | 'createdAt'>) => void;
   addChatMessage: (message: Omit<ChatMessage, 'id'>) => void;
@@ -65,6 +66,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         doctors,
         setDoctors,
         appointments,
+        setAppointments,
         chatMessages,
         addAppointment,
         addChatMessage,
