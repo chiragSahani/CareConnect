@@ -47,7 +47,7 @@ const Doctors: React.FC = () => {
   }, [doctors, searchQuery, selectedSpecialization]);
 
   return (
-    <Box bg="gray.50" minH="100vh" py={8}>
+    <Box bg="gray.50" minH="100vh" pt={28} pb={8}>
       <Container maxW="7xl">
         <MotionBox
           initial={{ opacity: 0, y: 20 }}

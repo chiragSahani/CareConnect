@@ -74,7 +74,7 @@ const Appointments: React.FC = () => {
 
   if (appointments.length === 0) {
     return (
-      <Box bg="gray.50" minH="100vh" py={20}>
+      <Box bg="gray.50" minH="100vh" py={28}>
         <Container maxW="4xl">
           <MotionBox
             initial={{ opacity: 0, y: 20 }}
@@ -118,7 +118,7 @@ const Appointments: React.FC = () => {
   }
 
   return (
-    <Box bg="gray.50" minH="100vh" py={8}>
+    <Box bg="gray.50" minH="100vh" pt={28} pb={8}>
       <Container maxW="4xl">
         <MotionBox
           initial={{ opacity: 0, y: 20 }}
