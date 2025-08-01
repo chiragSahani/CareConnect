@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <a href="https://careconnect-demo.vercel.app/" target="_blank">
+  <a href="https://care-connect-niroggyan.netlify.app/" target="_blank">
     <img src="https://img.shields.io/badge/Try%20it%20Now-LIVE-blueviolet?style=flat-square&logo=vercel" alt="Live App"/>
   </a>
   &nbsp;|&nbsp;
