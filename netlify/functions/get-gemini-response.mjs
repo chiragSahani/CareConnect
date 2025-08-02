@@ -2,18 +2,25 @@ import fetch from 'node-fetch';
 
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
 
-  const { message } = JSON.parse(event.body);
+  // Destructure both the new message and the previous chat history from the request
+  const { message, history } = JSON.parse(event.body);
   const apiKey = process.env.VITE_GEMINI_API_KEY;
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+  
+  if (!apiKey) {
+      return { statusCode: 500, body: JSON.stringify({ error: 'API key is not configured.' }) };
+  }
 
-  const chatHistory = [
-    {
-      role: "user",
-      parts: [{
-        text:`You are 'CareConnect AI', a friendly and professional AI assistant for the CareConnect healthcare platform. Your primary role is to help users navigate the app and understand its features. You now have an enhanced capability to guide users to the correct specialist based on their symptoms and recognize emergencies.
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+  // The system prompt that defines the AI's role and rules.
+  // This is always the first message in the conversation history.
+  const systemPrompt = {
+    role: "user",
+    parts: [{
+      text: `You are 'CareConnect AI', a friendly and professional AI assistant for the CareConnect healthcare platform. Your primary role is to help users navigate the app and understand its features. You now have an enhanced capability to guide users to the correct specialist based on their symptoms and recognize emergencies.
 
 **Core Features of CareConnect:**
 * **Find & Book Doctors:** Users can search for doctors by specialty, location, and availability, and book appointments instantly.
@@ -60,21 +67,33 @@ When a user describes a non-emergency symptom, your role is to suggest the type 
 **ABSOLUTE SAFETY RULE:** You must **NEVER** provide a medical diagnosis, suggest treatments, or interpret medical results. Your ONLY role for medical queries is to suggest a specialist and strongly advise the user to book a consultation. If a user asks "What do I have?" or "Is this serious?", your answer must always be: "I cannot answer that. It is very important to talk to a doctor to get an accurate diagnosis. I can help you book an appointment right now."
 
 Your goal is to be a helpful, safe, and trustworthy guide to the CareConnect app.`
-      }]
-    },
-    {
+    }]
+  };
+  
+  // The model's initial "understanding" response.
+  const initialModelResponse = {
       role: "model",
       parts: [{
-        text: "Understood. I am CareConnect AI. I will help users by explaining the app's features like booking appointments, video consultations, and managing records. I will maintain a professional and empathetic tone, using markdown for clarity. I will **never** provide medical advice and will always direct users to a qualified doctor for any medical concerns."
+        text: "Understood. I am CareConnect AI. I will first check every message for emergency keywords. If an emergency is detected, I will provide only the emergency response. Otherwise, I will guide users through the app, suggest specialists for non-emergency symptoms, and assist with post-consultation queries. I will never provide medical advice or diagnoses and will always direct users to a qualified doctor."
       }]
-    },
+  };
+
+  // Combine the system prompt, previous history, and the new message.
+  // The 'history' from the client is transformed to match the API's expected format.
+  const fullChatHistory = [
+    systemPrompt,
+    initialModelResponse,
+    ...history.map(msg => ({
+        role: msg.type === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }]
+    })),
     {
       role: "user",
       parts: [{ text: message }]
     }
   ];
 
-  const payload = { contents: chatHistory };
+  const payload = { contents: fullChatHistory };
 
   try {
     const response = await fetch(API_URL, {
@@ -94,12 +113,21 @@ Your goal is to be a helpful, safe, and trustworthy guide to the CareConnect app
     }
 
     const data = await response.json();
-    const botResponse = data.candidates[0].content.parts[0].text;
+    
+    if (data.candidates && data.candidates.length > 0) {
+        const botResponse = data.candidates[0].content.parts[0].text;
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ response: botResponse }),
+        };
+    } else {
+        // Handle cases where the API returns no candidates (e.g., safety blocks)
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ response: "I'm sorry, but I cannot respond to that. Please try rephrasing your message." }),
+        };
+    }
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ response: botResponse }),
-    };
   } catch (error) {
     return {
       statusCode: 500,
