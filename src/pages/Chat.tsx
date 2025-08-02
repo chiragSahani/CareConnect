@@ -1,7 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Trash2, MessageCircle } from 'lucide-react';
-import { useApp } from '../contexts/AppContext';
+
+// This is a mock context for standalone use.
+// In your actual app, you would import this from your context file.
+const useApp = () => {
+  const [chatMessages, setChatMessages] = useState([]);
+
+  const addChatMessage = (message) => {
+    setChatMessages(prev => [...prev, { ...message, id: Date.now() + Math.random() }]);
+  };
+
+  const clearChat = () => {
+    setChatMessages([]);
+  };
+
+  return { chatMessages, addChatMessage, clearChat };
+};
+
 
 // A simple component to render basic markdown (bold and lists)
 const MarkdownRenderer: React.FC<{ content: string }> = ({ content }) => {
@@ -49,7 +65,7 @@ const MarkdownRenderer: React.FC<{ content: string }> = ({ content }) => {
 };
 
 
-const Chat: React.FC = () => {
+const App: React.FC = () => {
   const { chatMessages, addChatMessage, clearChat } = useApp();
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -59,15 +75,16 @@ const Chat: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  // Function to get response from the serverless function
-  const getGeminiResponse = async (message: string): Promise<string> => {
+  // Function to get response from the serverless function, now accepting history
+  const getGeminiResponse = async (message: string, currentChatHistory: any[]): Promise<string> => {
     try {
       const response = await fetch('/.netlify/functions/get-gemini-response', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message }),
+        // Send both the new message and the entire history
+        body: JSON.stringify({ message, history: currentChatHistory }),
       });
 
       if (!response.ok) {
@@ -89,6 +106,7 @@ const Chat: React.FC = () => {
     const userMessage = inputMessage.trim();
     setInputMessage('');
 
+    // Add the new user message to the UI immediately
     addChatMessage({
       type: 'user',
       content: userMessage,
@@ -98,7 +116,8 @@ const Chat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const botResponse = await getGeminiResponse(userMessage);
+      // Pass the user's message AND the previous history to the API function
+      const botResponse = await getGeminiResponse(userMessage, chatMessages);
       
       addChatMessage({
         type: 'bot',
@@ -125,7 +144,7 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-8 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center font-sans">
       <div className="w-full max-w-2xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -227,7 +246,7 @@ const Chat: React.FC = () => {
 
           {/* Input */}
           <div className="border-t border-gray-200 p-4 bg-white">
-             <div className="mt-2 flex flex-wrap gap-2">
+             <div className="mt-2 flex flex-wrap gap-2 justify-center">
               {chatMessages.length === 0 && (
                 <>
                   <button
@@ -277,4 +296,6 @@ const Chat: React.FC = () => {
   );
 };
 
-export default Chat;
+// In a real application, you would export 'Chat' and use it within your App's context provider.
+// For this standalone example, we export a default component that can be rendered directly.
+export default App;
